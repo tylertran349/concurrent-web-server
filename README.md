@@ -1,14 +1,9 @@
 # Gunrock Concurrent Web Server
 
-A high-performance, multi-threaded web server built in C++ designed to handle
-concurrent HTTP requests efficiently. This server implements a thread pool
+A high-performance, multi-threaded web server I built in C++ designed to handle
+concurrent HTTP requests efficiently. I implemented a thread pool
 architecture with configurable worker threads and connection buffering to
 maximize throughput while maintaining HTTP 1.1 compliance.
-
-The `http_parse.c` file was written by [Ryan Dahl](https://github.com/ry) and is
-licensed under the BSD license by Ryan. The server architecture is inspired by
-modern web server design patterns and the excellent [OSTEP](http://ostep.org)
-textbook on operating systems concepts.
 
 # Quickstart
 
@@ -38,7 +33,7 @@ A full demo website is included for testing at: `http://localhost:8080/bootstrap
 
 # Features
 
-This web server implements several key features for high-performance concurrent request handling:
+My web server implements several key features for high-performance concurrent request handling:
 
 - **Multi-threaded Architecture**: Thread pool with configurable worker threads
 - **Connection Buffering**: Fixed-size buffer for managing incoming connections
@@ -47,7 +42,7 @@ This web server implements several key features for high-performance concurrent 
 - **FIFO Scheduling**: First-in-first-out request processing
 - **Security Features**: Path traversal protection and connection management
 
-## Architecture Goals
+# Architecture Goals
 
 I designed the server with the following principles in mind:
 
@@ -56,99 +51,13 @@ I designed the server with the following principles in mind:
 - Clean separation of concerns between networking and business logic
 - Extensible design for adding new request handlers
 
-My implementation draws from established operating systems concepts documented in:
-
-- [Intro to threads](http://pages.cs.wisc.edu/~remzi/OSTEP/threads-intro.pdf)
-- [Using locks](https://pages.cs.wisc.edu/~remzi/OSTEP/threads-locks.pdf)
-- [Producer-consumer relationships](http://pages.cs.wisc.edu/~remzi/OSTEP/threads-cv.pdf)
-- [Server concurrency architecture](http://pages.cs.wisc.edu/~remzi/OSTEP/threads-events.pdf)
-
-# HTTP Background
-
-This section provides a brief overview of how web servers work and the HTTP
-protocol (version 1.1) used for communication. Although web browsers and
-servers have [evolved significantly over the
-years](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP),
-the fundamental concepts remain the same and provide a solid foundation for
-modern web technologies. My implementation abstracts away many of the
-low-level networking details while keeping the core HTTP handling code
-readable and maintainable.
-
-Classic web browsers and web servers interact using a text-based protocol
-called **HTTP** (**Hypertext Transfer Protocol**). A web browser opens a
-connection to a web server and requests some content with HTTP. The web server
-responds with the requested content and closes the connection. The browser
-reads the content and displays it on the screen.
-
-HTTP is built on top of the **TCP/IP** protocol suite provided by the
-operating system. Together, TCP and IP ensure that messages are routed to
-their correct destination, get from source to destination reliably in the face
-of failure, and do not overly congest the network by sending too many messages
-at once, among other features. For more information about networks, see [this free book](https://book.systemsapproach.org).
-
-Each piece of content on the web server is associated with a file in the
-server's file system. The simplest is _static_ content, in which a client
-sends a request just to read a specific file from the server. Slightly more
-complex is _dynamic_ content, in which a client requests that an executable
-file be run on the web server and its output returned to the client.
-Each file has a unique name known as a **URL** (**Universal Resource
-Locator**).
-
-As a simple example, let's say the client browser wants to fetch static
-content (i.e., just some file) from a web server running on some machine. The
-client might then type in the following URL to the browser:
-`http://www.cs.wisc.edu/index.html`. This URL identifies that the HTTP
-protocol is to be used, and that an HTML file in the root directory (`/`) of
-the web server called `index.html` on the host machine `www.cs.wisc.edu`
-should be fetched.
-
-The web server is not just uniquely identified by which machine it is running
-on but also the **port** it is listening for connections upon. Ports are a
-communication abstraction that allow multiple (possibly independent) network
-communications to happen concurrently upon a machine; for example, the web
-server might be receiving an HTTP request upon port 80 while a mail server is
-sending email out using port 25. By default, web servers are expected to run
-on port 80 (the well-known HTTP port number), but sometimes (as in my
-implementation), a different port number will be used. To fetch a file from a web
-server running at a different port number (say 8000), specify the port number
-directly in the URL, e.g., `http://www.cs.wisc.edu:8000/index.html`.
-
-# The HTTP Request
-
-When a client (e.g., a browser) wants to fetch a file from a machine, the
-process starts by sending a message. The _request contents_ and subsequent
-_reply contents_ are specified precisely by the HTTP protocol.
-
-HTTP requests consist of a request line, followed by zero or more request
-headers, and finally an empty text line. A request line has the form:
-`method uri version`. The `method` is usually `GET`, which tells the web
-server that the client wants to read the specified file; however, other
-methods exist (e.g., `POST`). The `uri` is the file name, and perhaps optional
-arguments (in the case of dynamic content). The `version` indicates
-the version of the HTTP protocol that the web client is using (e.g.,
-HTTP/1.1).
-
-The HTTP response (from the server to the browser) consists of a response
-line, zero or more response headers, an empty text line, and the response
-body. A response line has the form version `status message`. The `status` is
-a three-digit positive integer that indicates the state of the request; common
-states include `200` for `OK`, `403` for `Forbidden` (the client can't access
-that file), and `404` for `File Not Found`. Important header lines are
-`Content-Type`, which specifies the type of content in the response body
-(e.g., HTML or gif), and `Content-Length`, which indicates the file size in
-bytes.
-
-Understanding these HTTP fundamentals helps when working with the server code,
-though my implementation handles most of the protocol details automatically.
-The modular design allows for easy extension of HTTP functionality if needed.
-
 # Building and Running
 
-The web server can be compiled and run from this repository. Simply type `make`
+My web server can be compiled and run from this repository. Simply type `make`
 to build the project. Use `make clean` to remove object files and executables
 for a clean build.
 
-The web server requires a port number to listen on. Ports below 1024 are
+My web server requires a port number to listen on. Ports below 1024 are
 _reserved_ (see the list
 [here](https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml)),
 so port numbers greater than 1023 should be used to avoid conflicts. The maximum
@@ -244,7 +153,7 @@ to further isolate the server process.
 
 ## Command Line Arguments
 
-The web server accepts the following command line arguments:
+My web server accepts the following command line arguments:
 
 ```bash
 $ ./gunrock_web [-p port] [-t threads] [-b buffers]
@@ -281,7 +190,7 @@ setting response bodies and status codes as needed.
 
 ## Threading Library
 
-I used a custom threading library called `dthread` that provides
+I created a custom threading library called `dthread` that provides
 logging capabilities for thread operations. This library includes the following
 key functions:
 
@@ -295,19 +204,19 @@ Initialize mutexes and condition variables using the standard pthread macros:
 
 ## Core Components
 
-The server consists of several key components that work together to provide
+My server consists of several key components I built that work together to provide
 concurrent request handling:
 
-- **gunrock.cpp** - Main server logic and request handling
-- **FileService.cpp** - File serving implementation with static content handling
-- **dthread** - Custom threading library with logging capabilities
-- **HTTP** - High-level HTTP object interfacing with the parser
-- **http_parser** - HTTP protocol parsing state machine
-- **HTTPRequest** - Request object populated by the framework
-- **HTTPResponse** - Response object filled by services
-- **HttpUtils** - Utility functions for HTTP operations
-- **MyServerSocket** - Server socket abstraction for accepting connections
-- **MySocket** - Socket abstraction for reading requests and writing responses
+- **gunrock.cpp** - Main server logic and request handling I implemented
+- **FileService.cpp** - File serving implementation I created with static content handling
+- **dthread** - Custom threading library I built with logging capabilities
+- **HTTP** - High-level HTTP object I created for interfacing with the parser
+- **http_parser** - HTTP protocol parsing state machine I implemented
+- **HTTPRequest** - Request object I created for the framework
+- **HTTPResponse** - Response object I designed for services
+- **HttpUtils** - Utility functions I wrote for HTTP operations
+- **MyServerSocket** - Server socket abstraction I implemented for accepting connections
+- **MySocket** - Socket abstraction I created for reading requests and writing responses
 
 ## Testing and Development
 
